@@ -56,6 +56,18 @@ function Chat() {
     }
   };
 
+  // Format timestamp to show date and time in hours and minutes
+  const formatTimestamp = (timestamp: string) => {
+    const date = new Date(timestamp);
+    return date.toLocaleString("en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   return (
     <div>
       <h3>Chat Room</h3>
@@ -64,9 +76,13 @@ function Chat() {
           <p>No messages yet</p>
         ) : (
           messages.map((msg, index) => (
-            <div key={index}>
-              <p>{msg.text}</p>
-              <small>{msg.timestamp}</small>
+            <div
+              key={index}
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <p>
+                {msg.text} <small>{formatTimestamp(msg.timestamp)}</small>
+              </p>
             </div>
           ))
         )}
