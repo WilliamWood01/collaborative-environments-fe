@@ -1,11 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
 
 interface Message {
+  id: string;
+  user_id: string;
+  room_id: string;
   text: string;
   timestamp: string;
 }
 
-function Chat() {
+interface ChatProps {
+  userID: string;
+}
+
+const Chat: React.FC<ChatProps> = ({ userID }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState<string>("");
   const ws = useRef<WebSocket | null>(null);
@@ -51,7 +58,13 @@ function Chat() {
   // Send a message to the WebSocket server
   const sendMessage = () => {
     if (ws.current && message) {
-      ws.current.send(message); // Send the message to the server
+      ws.current.send(
+        JSON.stringify({
+          user_id: userID,
+          room_id: "chat-room-1",
+          text: message,
+        })
+      ); // Send the message to the server
       setMessage(""); // Clear the input field
     }
   };
@@ -81,7 +94,8 @@ function Chat() {
               style={{ display: "flex", justifyContent: "space-between" }}
             >
               <p>
-                {msg.text} <small>{formatTimestamp(msg.timestamp)}</small>
+                <strong>{msg.user_id}:</strong> {msg.text}{" "}
+                <small>{formatTimestamp(msg.timestamp)}</small>
               </p>
             </div>
           ))
@@ -98,6 +112,6 @@ function Chat() {
       </div>
     </div>
   );
-}
+};
 
 export default Chat;
