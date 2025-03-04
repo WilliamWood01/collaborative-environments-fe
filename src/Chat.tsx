@@ -19,14 +19,23 @@ const Chat: React.FC<ChatProps> = ({ userID }) => {
 
   // Establish WebSocket connection when the component mounts
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("No token found, please log in");
+      return;
+    }
     if (ws.current) return; // If WebSocket already exists, do nothing
 
     // Connect to WebSocket server
     console.log("Connecting to WebSocket server");
-    const socket = new WebSocket("ws://localhost:8080/ws");
+    const socket = new WebSocket(`ws://localhost:8080/ws?token=${token}`);
 
     socket.onopen = () => {
       console.log("Connected to WebSocket server");
+    };
+
+    socket.onclose = () => {
+      console.log("Disconnected from WebSocket server");
     };
 
     socket.onerror = (error) => {

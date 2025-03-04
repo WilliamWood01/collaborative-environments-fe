@@ -22,13 +22,13 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         });
 
         if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem("token", data.token);
           onLogin(userID);
         } else {
           const errorData = await response.text();
           if (errorData === "User not found") {
-            alert(
-              "User does not exist. Please check your username or sign up."
-            );
+            alert("User does not exist. Please check your UserID or sign up.");
           } else if (errorData === "Invalid password") {
             alert("Incorrect password. Please try again.");
           } else {
@@ -39,7 +39,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         alert(`Login failed: ${error.message}`);
       }
     } else {
-      alert("Please enter both username and password");
+      alert("Please enter both UserID and password");
     }
   };
 
@@ -59,14 +59,18 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           alert("Sign-up successful, please log in");
           setIsSignUp(false);
         } else {
-          const errorData = await response.json();
-          alert(`Sign-up failed: ${errorData.message}`);
+          const errorData = await response.text();
+          if (errorData === "UserID already exists") {
+            alert("UserID already exists. Please choose a different username.");
+          } else {
+            alert(`Sign-up failed: ${errorData}`);
+          }
         }
       } catch (error: any) {
         alert(`Sign-up failed: ${error.message}`);
       }
     } else {
-      alert("Please enter both username and password");
+      alert("Please enter both UserID and password");
     }
   };
 
@@ -77,7 +81,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         type="text"
         value={userID}
         onChange={(e) => setUserID(e.target.value)}
-        placeholder="Enter your username"
+        placeholder="Enter your UserID"
       />
       <input
         type="password"
