@@ -75,30 +75,63 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   };
 
   return (
-    <div>
-      <h3>{isSignUp ? "Sign Up" : "Login"}</h3>
-      <input
-        type="text"
-        value={userID}
-        onChange={(e) => setUserID(e.target.value)}
-        placeholder="Enter your UserID"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Enter your password"
-      />
-      {isSignUp ? (
-        <button onClick={handleSignUp}>Sign Up</button>
-      ) : (
-        <button onClick={handleLogin}>Login</button>
-      )}
-      <button onClick={() => setIsSignUp(!isSignUp)}>
-        {isSignUp
-          ? "Already have an account? Login"
-          : "Don't have an account? Sign Up"}
-      </button>
+    <div className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-body">
+              <h3 className="card-title text-center">
+                {isSignUp ? "Sign Up" : "Login"}
+              </h3>
+              <div className="form-group">
+                <label htmlFor="userID">UserID</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="userID"
+                  value={userID}
+                  onChange={(e) => setUserID(e.target.value)}
+                  placeholder="Enter your UserID"
+                />
+              </div>
+              <div className="form-group mb-3">
+                <label htmlFor="password">Password</label>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                />
+              </div>
+              {isSignUp ? (
+                <button
+                  className="btn btn-primary btn-block"
+                  onClick={handleSignUp}
+                >
+                  Sign Up
+                </button>
+              ) : (
+                <button
+                  className="btn btn-primary btn-block"
+                  onClick={handleLogin}
+                >
+                  Login
+                </button>
+              )}
+              <button
+                className="btn btn-link btn-block"
+                onClick={() => setIsSignUp(!isSignUp)}
+              >
+                {isSignUp
+                  ? "Already have an account? Login"
+                  : "Don't have an account? Sign Up"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

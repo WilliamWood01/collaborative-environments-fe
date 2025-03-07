@@ -21,6 +21,7 @@ const Chat: React.FC<ChatProps> = ({ userID }) => {
   const [file, setFile] = useState<File | null>(null);
   const ws = useRef<WebSocket | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null); // Add ref for file input
+  const messageInputRef = useRef<HTMLInputElement | null>(null);
 
   // Establish WebSocket connection when the component mounts
   useEffect(() => {
@@ -123,51 +124,93 @@ const Chat: React.FC<ChatProps> = ({ userID }) => {
     });
   };
 
+  // Handle key down event for the message input field
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      sendMessage();
+    }
+  };
+
   return (
-    <div>
-      <h3>Chat Room</h3>
-      <div>
-        {messages.length === 0 ? (
-          <p>No messages yet</p>
-        ) : (
-          messages.map((msg, index) => (
-            <div
-              key={index}
-              style={{ display: "flex", justifyContent: "space-between" }}
-            >
-              <p>
-                <strong>{msg.user_id}:</strong> {msg.text}{" "}
-                {msg.file_id && (
-                  <a
-                    href={`http://localhost:8080/files/${
-                      msg.file_id
-                    }?token=${localStorage.getItem("token")}`} //Not ideal to include token here, should be handled as a header in a real app
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    download={msg.file_name} // Use the original file name for download
-                  >
-                    {msg.file_name} {/* Display the original file name */}
-                  </a>
-                )}{" "}
-                <small>{formatTimestamp(msg.timestamp)}</small>
-              </p>
-            </div>
-          ))
-        )}
+    <div className="container mt-4">
+      <h3 className="text-center">Chat Room</h3>
+      <div className="card">
+        <div
+          className="card-body"
+          style={{ height: "800px", overflowY: "auto" }}
+        >
+          {messages.length === 0 ? (
+            <p className="text-center">No messages yet</p>
+          ) : (
+            messages.map((msg, index) => (
+              <div
+                key={index}
+                className={`mb-3 d-flex ${
+                  msg.user_id === userID
+                    ? "justify-content-end"
+                    : "justify-content-start"
+                }`}
+              >
+                <div
+                  className={`p-2 rounded ${
+                    msg.user_id === userID
+                      ? "bg-primary text-white"
+                      : "bg-light text-dark"
+                  }`}
+                  style={{
+                    wordBreak: "break-word",
+                    overflowWrap: "break-word",
+                  }} // Add CSS properties
+                >
+                  <p className="mb-1">
+                    <strong>
+                      {msg.user_id === userID ? "You" : msg.user_id}:
+                    </strong>{" "}
+                    {msg.text}{" "}
+                    {msg.file_id && (
+                      <a
+                        href={`http://localhost:8080/files/${
+                          msg.file_id
+                        }?token=${localStorage.getItem("token")}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        download={msg.file_name} // Use the original file name for download
+                        className="text-white"
+                      >
+                        {msg.file_name} {/* Display the original file name */}
+                      </a>
+                    )}{" "}
+                    <small className="text-muted">
+                      {formatTimestamp(msg.timestamp)}
+                    </small>
+                  </p>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
-      <div>
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="Type a message"
-        />
-        <input
-          type="file"
-          ref={fileInputRef} // Attach ref to file input
-          onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
-        />
-        <button onClick={sendMessage}>Send</button>
+      <div className="mt-3">
+        <div className="input-group">
+          <input
+            type="text"
+            className="form-control"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={handleKeyDown} // Add key down event listener
+            placeholder="Type a message"
+            ref={messageInputRef} // Attach ref to message input
+          />
+          <input
+            type="file"
+            className="form-control"
+            ref={fileInputRef} // Attach ref to file input
+            onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
+          />
+          <button className="btn btn-primary" onClick={sendMessage}>
+            Send
+          </button>
+        </div>
       </div>
     </div>
   );
