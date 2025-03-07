@@ -7,6 +7,8 @@ interface Message {
   text: string;
   timestamp: string;
   file_id?: string;
+  file_name?: string;
+  file_type?: string;
 }
 
 interface ChatProps {
@@ -80,6 +82,8 @@ const Chat: React.FC<ChatProps> = ({ userID }) => {
               room_id: "chat-room-1",
               text: message,
               file_data: Array.from(new Uint8Array(fileData)), // Convert ArrayBuffer to byte array
+              file_name: file.name, // Include the original file name
+              file_type: file.type, // Include the original file type
             };
             ws.current.send(JSON.stringify(fileMessage));
             setMessage(""); // Clear the message input
@@ -135,11 +139,14 @@ const Chat: React.FC<ChatProps> = ({ userID }) => {
                 <strong>{msg.user_id}:</strong> {msg.text}{" "}
                 {msg.file_id && (
                   <a
-                    href={`http://localhost:8080/files/${msg.file_id}`}
+                    href={`http://localhost:8080/files/${
+                      msg.file_id
+                    }?token=${localStorage.getItem("token")}`} //Not ideal to include token here, should be handled as a header in a real app
                     target="_blank"
                     rel="noopener noreferrer"
+                    download={msg.file_name} // Use the original file name for download
                   >
-                    Download File
+                    {msg.file_name} {/* Display the original file name */}
                   </a>
                 )}{" "}
                 <small>{formatTimestamp(msg.timestamp)}</small>
