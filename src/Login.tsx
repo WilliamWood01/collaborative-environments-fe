@@ -13,6 +13,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const handleLogin = async () => {
     if (userID && password) {
       try {
+        //Send a POST request to the BE endpoint with the user_id and password
         const response = await fetch("http://localhost:8080/login", {
           method: "POST",
           headers: {
@@ -26,6 +27,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           localStorage.setItem("token", data.token);
           onLogin(userID);
         } else {
+          // Handle any errors
           const errorData = await response.text();
           if (errorData === "User not found") {
             alert("User does not exist. Please check your UserID or sign up.");
@@ -47,6 +49,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const handleSignUp = async () => {
     if (userID && password) {
       try {
+        //Send a POST request to the BE endpoint with the user_id and password
         const response = await fetch("http://localhost:8080/signup", {
           method: "POST",
           headers: {
@@ -74,6 +77,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     }
   };
 
+  //Appearance of the login page
   return (
     <div className="container mt-5">
       <div className="row justify-content-center">

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
+// Stucture for incoming messages
 interface Message {
   id: string;
   user_id: string;
@@ -131,6 +132,7 @@ const Chat: React.FC<ChatProps> = ({ userID }) => {
     }
   };
 
+  // Appearance of the chat page
   return (
     <div className="container mt-4">
       <h3 className="text-center">Chat Room</h3>
@@ -160,7 +162,7 @@ const Chat: React.FC<ChatProps> = ({ userID }) => {
                   style={{
                     wordBreak: "break-word",
                     overflowWrap: "break-word",
-                  }} // Add CSS properties
+                  }}
                 >
                   <p className="mb-1">
                     <strong>
@@ -174,10 +176,10 @@ const Chat: React.FC<ChatProps> = ({ userID }) => {
                         }?token=${localStorage.getItem("token")}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        download={msg.file_name} // Use the original file name for download
+                        download={msg.file_name}
                         className="text-white"
                       >
-                        {msg.file_name} {/* Display the original file name */}
+                        {msg.file_name}
                       </a>
                     )}{" "}
                     <small className="text-muted">
